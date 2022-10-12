@@ -1,8 +1,11 @@
+#![allow(dead_code)]
+
+mod lexer;
 mod parser;
-mod runner;
+mod rt;
 
 use clap::arg;
-use runner::Context;
+use rt::context::Context;
 use std::{fs, path::PathBuf};
 
 fn main() {
@@ -17,7 +20,11 @@ fn main() {
     let file = fs::read_to_string(path).expect("Could not find file");
 
     let source = parser::parse(&file);
+    println!("{source:?}");
+    let module = lexer::build_module(&source);
+    println!("{module:?}");
+
     let mut context = Context::default();
 
-    runner::run(source, &mut context);
+    // rt::run(source, &mut context);
 }

@@ -15,29 +15,35 @@ enum State {
     StringEscape,
 }
 
-#[derive(Debug)]
-pub enum Command {
-    PushStr(String),
-    PushInt(i64),
-    PushUInt(u64),
-    PushFloat(f64),
-    PushBool(bool),
-    Call(String),
+#[derive(Debug, Clone)]
+pub enum Token {
+    StringLiteral(String),
+    IntegerLiteral(i64),
+    UnsignedIntegerLiteral(u64),
+    FloatLiteral(f64),
+    BoolLiteral(bool),
+    Identifier(String),
+    LetKW,
+    WithKW,
+    FuncKW,
+    StructKW,
+    BeginKW,
+    EndKW,
 }
 
-pub fn parse(source: &String) -> Vec<Command> {
+pub fn parse(source: &String) -> Vec<Token> {
     let mut state = State::Normal;
     let mut error = false;
 
     let mut collector = String::new();
-    let mut commands: Vec<Command> = vec![];
+    let mut tokens: Vec<Token> = vec![];
 
     for char in source.chars() {
         match state {
             State::Normal => match char {
                 ' ' | '\n' => {
                     if collector != "" {
-                        commands.push(parse_individual(collector));
+                        tokens.push(parse_individual(collector));
                         collector = String::new();
                     }
                 }
@@ -64,7 +70,7 @@ pub fn parse(source: &String) -> Vec<Command> {
             State::String => {
                 if char == '"' {
                     state = State::Normal;
-                    commands.push(Command::PushStr(collector));
+                    tokens.push(Token::StringLiteral(collector));
                     collector = String::new();
                     continue;
                 }
@@ -100,16 +106,20 @@ pub fn parse(source: &String) -> Vec<Command> {
         };
     }
 
+    if !collector.is_empty() {
+        tokens.push(parse_individual(collector));
+    }
+
     if error {
         panic!("Failed to parse source code");
     }
 
-    return commands;
+    return tokens;
 }
 
-fn parse_individual(text: String) -> Command {
+fn parse_individual(text: String) -> Token {
     if U64_REGEX.is_match(&text) {
-        return Command::PushUInt(
+        return Token::UnsignedIntegerLiteral(
             text.strip_prefix("u")
                 .expect("This should never fail")
                 .replace(",", "")
@@ -117,22 +127,32 @@ fn parse_individual(text: String) -> Command {
                 .expect("This should never fail"),
         );
     } else if I64_REGEX.is_match(&text) {
-        return Command::PushInt(
+        return Token::IntegerLiteral(
             text.replace(",", "")
                 .parse()
                 .expect("This should never fail"),
         );
     } else if F64_REGEX.is_match(&text) {
-        return Command::PushFloat(
+        return Token::FloatLiteral(
             text.replace(",", "")
                 .parse()
                 .expect("This should never fail"),
         );
     } else if &text == "true" {
-        return Command::PushBool(true);
+        return Token::BoolLiteral(true);
     } else if &text == "false" {
-        return Command::PushBool(false);
+        return Token::BoolLiteral(false);
+    } else if &text == "struct" {
+        return Token::StructKW;
+    } else if &text == "func" {
+        return Token::FuncKW;
+    } else if &text == "with" {
+        return Token::WithKW;
+    } else if &text == "begin" {
+        return Token::BeginKW;
+    } else if &text == "end" {
+        return Token::EndKW;
     }
 
-    return Command::Call(text);
+    return Token::Identifier(text);
 }
