@@ -1,18 +1,18 @@
 struct Person
-  name String
-  age int
+  name core/String
+  age core/Int
 
   func new
-    name String
-    age int
+    name core/String
+    age core/Int
   begin
-    *name $name set
-    *age $age set
+    *name $name core/set
+    *age $age core/set
   end
 
   func print
   begin
-      "{} is {} years old" $name $age print
+      $name $age "%s is %d years old" std/io::println
   end
 end
 

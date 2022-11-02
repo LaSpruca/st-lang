@@ -10,16 +10,25 @@
     "Programming Languages"
   ],
   "contributes": {
-    "languages": [{
-      "id": "laspruca.st-lang-vscode",
-      "aliases": ["ST Lang", "st-lang"],
-      "extensions": [".st"],
-      "configuration": "./language-configuration.json"
-    }],
-    "grammars": [{
-      "language": "st-lang",
-      "scopeName": "source.st-lang",
-      "path": "./syntaxes/st-lang.tmLanguage.json"
-    }]
+    "languages": [
+      {
+        "id": "st-lang",
+        "aliases": [
+          "ST Lang",
+          "st-lang"
+        ],
+        "extensions": [
+          ".st"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "st-lang",
+        "scopeName": "source.st-lang",
+        "path": "./syntaxes/st-lang.tmLanguage.json"
+      }
+    ]
   }
 }
