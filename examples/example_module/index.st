@@ -11,4 +11,3 @@ end
 func say_hello with begin
     "Hello world" say_msg
 end
-

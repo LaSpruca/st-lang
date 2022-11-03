@@ -20,7 +20,7 @@
       "patterns": [
         {
           "name": "keyword.control.st-lang",
-          "match": "\\b(let|func|struct|begin|end|with|trait|loop|loop_over|if|else_if|else|using|require|include|module|internal|package)\\b"
+          "match": "\\b(let|func|struct|begin|end|with|trait|loop|loop_over|if|else_if|else|using|module|internal|package|set|new|as|error|recover)\\b"
         }
       ]
     },

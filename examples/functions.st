@@ -9,7 +9,8 @@ func sum with
     numbers Array{Int}
 begin
     let total Int
-
+    0 total set
+    
     loop element with numbers
         total *element + *total Array::push
     end

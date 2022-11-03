@@ -29,6 +29,6 @@ struct Person with begin
 end
 
 func main with begin
-    "Nathan" 16 Person::new Person::print
-    "Daniel" 1 Person::new Person::print
+    "Nathan" 16 new Person Person::print
+    "Daniel" 1 new Person Person::print
 end
