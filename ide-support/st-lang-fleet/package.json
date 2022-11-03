@@ -1,0 +1,27 @@
+{
+  "name": "st-lang-vscode",
+  "description": "",
+  "version": "0.0.1",
+  "contributes": {
+    "languages": [
+      {
+        "id": "st-lang",
+        "aliases": [
+          "ST Lang",
+          "st-lang"
+        ],
+        "extensions": [
+          ".st"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "st-lang",
+        "scopeName": "source.st-lang",
+        "path": "./syntaxes/st-lang.tmLanguage.json"
+      }
+    ]
+  }
+}

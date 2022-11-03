@@ -10,6 +10,9 @@
     },
     {
       "include": "#comments"
+    },
+    {
+      "include": "#member"
     }
   ],
   "repository": {
@@ -17,7 +20,7 @@
       "patterns": [
         {
           "name": "keyword.control.st-lang",
-          "match": "\\b(let|func|struct|begin|end|with|trait)\\b"
+          "match": "\\b(let|func|struct|begin|end|with|trait|loop|loop_over|if|else_if|else|using|require|include|module|internal|package)\\b"
         }
       ]
     },
@@ -36,6 +39,14 @@
       "name": "comment",
       "begin": "--",
       "end": "\n"
+    },
+    "members": {
+      "name": "entity.name.method",
+      "match": "(\\$\\w[\\w\\d]+)"
+    },
+    "local": {
+      "name": "entity.name",
+      "match": "(\\*\\w[\\w\\d]+)"
     }
   },
   "scopeName": "source.st-lang"
