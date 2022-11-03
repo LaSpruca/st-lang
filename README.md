@@ -92,6 +92,18 @@ end
 
 The name of the function is a standard `name`. Next is the return types. This is a list of path identifiers, which list out how the stack should look at the end of the function from top to bottom. Next is the with statement. The `with` keyword separates the return types from the function parameters. The parameters are defined as `name Type`. The arguments to these parameters are provided as locals in the context of the function when invoked, and do not appear on the stack.
 
+Functions that have a chance of erroring need to denote what the do if they error using the error identifier.
+
+```st
+func <name> <return types> error <error return types> with
+    <parameters>
+begin
+    <function body>
+end
+```
+
+The error return types is the return type of the function in the case that it errors.
+
 ### Anonymous functions
 
 Unlike a regular function, anonymous functions are defined on the heap, and are defined by making the name of a function \_, i.e.
@@ -110,7 +122,7 @@ Anonymous functions can only appear within other functions or methods.
 
 Structures repersent the structure of an object, and are defined with the following syntax
 
-```st-lang
+```st
 struct <name> with <traits> begin
     <fields>
 
@@ -128,4 +140,37 @@ struct <name> begin
 end
 ```
 
-Once the type checker
+Every field in a struct has an associated getter method generated so that it's contents can be accessed from outside a method, i.e. in a function or a method on another struct etc., however, you will need to manually create a setter method for any fields you want to be able to set.
+
+Fields or methods that you don't want to expose to the outside world, i.e. to anything outside of the current struct, can be annotated with the `internal` keyword like so
+
+```st
+internal name String
+```
+
+This means that methods cannot be accessed outside the currect struct. Any internal fields will will not gain a generated getter method, and instead, the only mean of accessing these field is to use the field accessor inside of a method.
+
+### Methods
+
+Methods are defined in the same way as a normal structure. These only difference is that the method allows for accessing of a structs directly fields with a member identifier. A structs methods call also be referenced using a member identifier. This will remove any need to pass the reference to the current object into the function call. Here is a small example of what that looks like
+
+```st
+struct Foo
+    a String
+
+    func bar1 with begin
+        "Help" $a set
+        $print
+    end
+
+    func print with begin
+        $a putstrln
+    end
+end
+```
+
+## Traits
+
+Traits in ST Lang provide a set of methods that a certain struct should implement. This is done by first annotating that a struct implements a trait as shown in the [structures](#structures) section, and then implementing methods with the name `<trait name>::<trait method>`.
+
+The deffinition for

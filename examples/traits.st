@@ -16,11 +16,16 @@ end
 
 struct Human with Greets begin
     name String
+
     func new with name String begin
         *name $name set
     end
 
-    func greet with name String begin
+    func Animal::name String with begin
+        $name
+    end
+
+    func Greets::greet with name String begin
         [$name, *name] "%s says hello to %s" println
     end
 end
@@ -30,6 +35,10 @@ struct Dog with Animal begin
    
     func new with name String begin
         *name $name set
+    end
+
+    func Animal::name String with name String begin 
+        $name
     end
 end
 
