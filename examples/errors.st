@@ -1,4 +1,4 @@
-module
+package
     name errors
     version "1.0.0"
 
@@ -24,5 +24,7 @@ func main with begin
         let issues Array{Format}
         *issues Array::push
         issues "That wasn't very cash money of me, the function says %s" fmt
-    end putstrln
+    end 
+    
+    putstrln
 end

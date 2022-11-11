@@ -7,5 +7,5 @@ pub enum Identifier {
 
 pub struct Type {
     identifier: Identifier,
-    typeargs
+    typeargs: Vec<String>,
 }
