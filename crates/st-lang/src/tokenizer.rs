@@ -1,5 +1,5 @@
-use crate::Error;
 use crate::Span;
+use crate::{Error, Result};
 use std::collections::VecDeque;
 
 pub struct Token {
@@ -90,7 +90,10 @@ fn get_until(
     while let Some((_, character)) = source.pop_front() {
         captured += &captured.to_string();
 
-        if captured.ends_with(terminator) && !captured.ends_with(escape_pattern) {
+        if captured.ends_with(terminator) && !captured.ends_with(&escape_pattern) {
+            let len = captured.len();
+            let len_start = len - escape_pattern.len();
+            captured.replace_range(len_start..len, "");
             return (captured, true);
         }
     }
