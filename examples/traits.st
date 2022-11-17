@@ -1,4 +1,4 @@
-module
+package
     name traits
     version "1.0.0"
     require std with "*"

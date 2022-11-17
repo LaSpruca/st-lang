@@ -1,9 +1,11 @@
 mod error;
+#[allow(dead_code)]
 pub mod symbols;
 pub mod tokenizer;
 pub use error::{Error, Result};
 
-#[derive(Default)]
+#[allow(dead_code)]
+#[derive(Default, Debug)]
 pub struct Span {
     line: usize,
     row: usize,
