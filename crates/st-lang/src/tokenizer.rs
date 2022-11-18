@@ -1,5 +1,4 @@
-use crate::Span;
-use crate::{Error, Result};
+use crate::{Error, Result, Span};
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::collections::VecDeque;
@@ -58,6 +57,22 @@ pub enum TokenEnum {
     TupleClose,
     Colon,
     Comma,
+}
+
+impl TokenEnum {
+    pub fn name(&self) -> String {
+        match self {
+            Self::Identifier(_) => "Identifier".into(),
+            Self::String(_) => "String".into(),
+            Self::UInt(_) => "UInt".into(),
+            Self::Int(_) => "Int".into(),
+            Self::Float(_) => "Float".into(),
+            Self::Bool(_) => "Bool".into(),
+            _ => {
+                format!("{self:?}")
+            }
+        }
+    }
 }
 
 pub fn tokenize(source: &str, file_name: &str) -> Result<Vec<Token>> {

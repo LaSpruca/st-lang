@@ -29,6 +29,30 @@ pub enum Error {
         content: String,
         parse_error: ParseFloatError,
     },
+
+    #[error("{file}({line}:{column}) Found unexpected token {token}, expected: {expected}")]
+    UnexpectedToken {
+        file: String,
+        line: usize,
+        column: usize,
+        token: String,
+        expected: String,
+    },
+
+    #[error("{file}({line}:{column}): No name specified for module/package")]
+    UnnamedModule {
+        file: String,
+        line: usize,
+        column: usize,
+    },
+
+    #[error("{file}({line}:{column}): Unclosed block error")]
+    UnclosedBlock {
+        file: String,
+        line: usize,
+        column: usize,
+        opening_block: String,
+    },
 }
 
 pub type Result<T> = core::result::Result<T, Error>;
