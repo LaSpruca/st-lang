@@ -1,4 +1,4 @@
-using Std::CLI
+using Std::CLI;
 
 data Args {
     all: Bool;
