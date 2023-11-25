@@ -1,30 +1,22 @@
-#![allow(dead_code)]
+use clap::Parser;
+use st_core::tokenizer::tokenize;
+use std::path::PathBuf;
 
-mod lexer;
-mod parser;
-mod rt;
-
-use clap::arg;
-use rt::context::Context;
-use std::{fs, path::PathBuf};
+#[derive(Debug, Parser)]
+pub struct Args {
+    /// The source file to execute
+    file: PathBuf,
+    /// Use the source [`Args::file`] as a project manifest
+    #[clap(long, short)]
+    project: bool,
+}
 
 fn main() {
-    let cmd = clap::Command::new("st")
-        .about("A stupid lil programmin")
-        .arg(arg!(-'f' --"file" <PATH>).value_parser(clap::value_parser!(std::path::PathBuf)));
+    let Args { file: path, .. } = Args::parse();
 
-    let matches = cmd.get_matches();
+    let file = std::fs::read_to_string(&path).expect("Could not read file");
 
-    let path: &PathBuf = matches.get_one("file").expect("Please specify a file");
+    let tokenizer = tokenize(&file);
 
-    let file = fs::read_to_string(path).expect("Could not find file");
-
-    let source = parser::parse(&file);
-    println!("{source:?}");
-    let module = lexer::build_module(&source);
-    println!("{module:?}");
-
-    let mut context = Context::default();
-
-    // rt::run(source, &mut context);
+    let _tokens = tokenizer.collect::<Vec<_>>();
 }

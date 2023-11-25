@@ -1,1 +1,0 @@
-Wow incredable, this extension does the *bear* minimum to make my language *almost* readable
