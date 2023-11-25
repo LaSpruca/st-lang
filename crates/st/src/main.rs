@@ -14,7 +14,7 @@ pub struct Args {
 fn main() {
     let Args { file: path, .. } = Args::parse();
 
-    let file = std::fs::read_to_string(&path).expect("Could not read file");
+    let file = std::fs::read_to_string(path).expect("Could not read file");
 
     let tokenizer = tokenize(&file);
 

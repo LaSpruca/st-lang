@@ -20,6 +20,8 @@ pub enum TokenEnum {
     KWRef,
     /// mut
     KWMut,
+    /// pub
+    KWPub,
 
     /// |?
     PipeMatch,
@@ -71,6 +73,8 @@ pub enum TokenEnum {
     SemiColon,
     /// .
     Period,
+    /// ,
+    Comma,
 
     Identifier(String),
     Bool(bool),
@@ -198,11 +202,7 @@ fn get_next<T: Iterator<Item = TokenIterItem>>(
             column,
             token: TokenEnum::Times,
         }),
-        '/' => Ok(Token {
-            row,
-            column,
-            token: TokenEnum::Divide,
-        }),
+        '/' => return get_slash(iter, column, row),
         '%' => Ok(Token {
             row,
             column,
@@ -228,6 +228,11 @@ fn get_next<T: Iterator<Item = TokenIterItem>>(
         'a'..='z' | 'A'..='Z' | '_' => Ok(get_identifier(iter, ch, column, row)),
         '0'..='9' => Ok(get_number(iter, ch, column, row)),
         '"' => get_string(iter, column, row),
+        ',' => Ok(Token {
+            column,
+            row,
+            token: TokenEnum::Comma,
+        }),
         _ => Err(anyhow!("{row}:{column} Unexpected character {ch}")),
     })
 }
@@ -354,13 +359,13 @@ fn get_identifier<T: Iterator<Item = TokenIterItem>>(
     let mut str = format!("{current}");
 
     while {
-        match iter.peek() {
+        matches!(
+            iter.peek(),
             Some(TokenIterItem {
                 ch: 'a'..='z' | 'A'..='Z' | '_' | '0'..='9',
                 ..
-            }) => true,
-            _ => false,
-        }
+            })
+        )
     } {
         str.push(iter.next().unwrap().ch);
     }
@@ -466,4 +471,32 @@ fn get_string<T: Iterator<Item = TokenIterItem>>(
         column,
         row,
     })
+}
+
+fn get_slash<T: Iterator<Item = TokenIterItem>>(
+    iter: &mut Peekable<T>,
+    column: usize,
+    row: usize,
+) -> Option<anyhow::Result<Token>> {
+    let next = iter.peek();
+
+    match next {
+        Some(TokenIterItem { ch: '/', .. }) => {
+            while {
+                match iter.peek() {
+                    Some(TokenIterItem { ch: '\n', .. }) => false,
+                    Some(_) => true,
+                    None => false,
+                }
+            } {
+                iter.next();
+            }
+            get_next(iter)
+        }
+        _ => Some(Ok(Token {
+            token: TokenEnum::Divide,
+            column,
+            row,
+        })),
+    }
 }

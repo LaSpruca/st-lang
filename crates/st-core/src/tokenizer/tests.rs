@@ -53,7 +53,7 @@ fn test_pipe_operators() {
 
 #[test]
 fn parse_singles() {
-    let test_str = "+-*/%^.(){}<>;:.";
+    let test_str = "+-*/%^.(){}<>;:.,";
 
     let expected = vec![
         Ok(Token {
@@ -135,6 +135,11 @@ fn parse_singles() {
             token: TokenEnum::Period,
             row: 1,
             column: 16,
+        }),
+        Ok(Token {
+            token: TokenEnum::Comma,
+            row: 1,
+            column: 17,
         }),
     ];
     let actual = tokenize(test_str)
@@ -312,9 +317,10 @@ fn test_parse_numbers() {
 
 #[test]
 fn test_parse_str() {
-    let test_str = r#""This is a \"beautiful\" string""#;
+    let test_str = r#""This is a \"beautiful\" 
+string""#;
     let expected = vec![Ok(Token {
-        token: TokenEnum::String("This is a \"beautiful\" string".into()),
+        token: TokenEnum::String("This is a \"beautiful\" \nstring".into()),
         row: 1,
         column: 1,
     })];
@@ -335,10 +341,21 @@ fn test_parse_str() {
 }
 
 #[test]
-fn test_fib_st() {
-    let errors = tokenize(include_str!("../../../../examples/fib.st"))
-        .filter_map(Result::err)
-        .collect::<Vec<_>>();
+fn test_examples() {
+    let files = glob::glob("../../examples/**/*.st").unwrap();
+    let mut parsed = 0;
 
-    assert_eq!(errors.len(), 0, "{:#?}", errors);
+    for a in files {
+        parsed += 1;
+        let path = a.unwrap();
+        let source = std::fs::read_to_string(&path).unwrap();
+        let errors = tokenize(&source)
+            .filter_map(|item| match item {
+                Ok(_) => None,
+                Err(e) => Some(e),
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(errors.len(), 0, "{}:\n{:#?}", path.display(), errors);
+    }
+    assert!(parsed > 0, "Parsed 0 files");
 }

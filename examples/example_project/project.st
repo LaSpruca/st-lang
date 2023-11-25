@@ -1,4 +1,4 @@
-using Std::Build::ProjectDescriptor
+using Std::Build::ProjectDescriptor;
 
 func project () (ProjectDescriptor) {
     ProjectDescriptor::init |= project

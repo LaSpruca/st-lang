@@ -9,3 +9,5 @@ edition = "2021"
 regex = "1.6.0"
 lazy_static = "1.4.0"
 anyhow = { workspace = true }
+glob = "0.3.1"
+thiserror = "1.0.50"
