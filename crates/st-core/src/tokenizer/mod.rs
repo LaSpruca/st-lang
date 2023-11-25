@@ -16,6 +16,10 @@ pub enum TokenEnum {
     KWObject,
     /// enum
     KWEnum,
+    /// ref
+    KWRef,
+    /// mut
+    KWMut,
 
     /// |?
     PipeMatch,
@@ -368,6 +372,8 @@ fn get_identifier<T: Iterator<Item = TokenIterItem>>(
             "using" => TokenEnum::KWUsing,
             "object" => TokenEnum::KWObject,
             "enum" => TokenEnum::KWEnum,
+            "ref" => TokenEnum::KWRef,
+            "mut" => TokenEnum::KWMut,
             "true" => TokenEnum::Bool(true),
             "false" => TokenEnum::Bool(false),
 

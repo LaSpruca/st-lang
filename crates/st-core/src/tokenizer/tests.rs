@@ -154,7 +154,7 @@ fn parse_singles() {
 
 #[test]
 fn test_words() {
-    let test_str = "func data using.object enum lalala true false";
+    let test_str = "func data using.object enum lalala true false mut ref";
 
     let expected = vec![
         Ok(Token {
@@ -201,6 +201,16 @@ fn test_words() {
             token: TokenEnum::Bool(false),
             row: 1,
             column: 41,
+        }),
+        Ok(Token {
+            token: TokenEnum::KWMut,
+            column: 47,
+            row: 1,
+        }),
+        Ok(Token {
+            token: TokenEnum::KWRef,
+            column: 51,
+            row: 1,
         }),
     ];
     let actual = tokenize(test_str)
