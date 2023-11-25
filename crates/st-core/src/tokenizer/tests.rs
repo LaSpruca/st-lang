@@ -151,3 +151,184 @@ fn parse_singles() {
             assert_eq!(expected, received, "{}th assertion failed", i + 1)
         });
 }
+
+#[test]
+fn test_words() {
+    let test_str = "func data using.object enum lalala true false";
+
+    let expected = vec![
+        Ok(Token {
+            token: TokenEnum::KWFunc,
+            row: 1,
+            column: 1,
+        }),
+        Ok(Token {
+            token: TokenEnum::KWData,
+            row: 1,
+            column: 6,
+        }),
+        Ok(Token {
+            token: TokenEnum::KWUsing,
+            row: 1,
+            column: 11,
+        }),
+        Ok(Token {
+            token: TokenEnum::Period,
+            row: 1,
+            column: 16,
+        }),
+        Ok(Token {
+            token: TokenEnum::KWObject,
+            row: 1,
+            column: 17,
+        }),
+        Ok(Token {
+            token: TokenEnum::KWEnum,
+            row: 1,
+            column: 24,
+        }),
+        Ok(Token {
+            token: TokenEnum::Identifier("lalala".into()),
+            row: 1,
+            column: 29,
+        }),
+        Ok(Token {
+            token: TokenEnum::Bool(true),
+            row: 1,
+            column: 36,
+        }),
+        Ok(Token {
+            token: TokenEnum::Bool(false),
+            row: 1,
+            column: 41,
+        }),
+    ];
+    let actual = tokenize(test_str)
+        .map(|item| item.map_err(|e| e.to_string()))
+        .collect::<Vec<_>>();
+
+    assert_eq!(expected.len(), actual.len(), "{actual:#?}");
+
+    expected
+        .into_iter()
+        .zip(actual)
+        .enumerate()
+        .for_each(|(i, (expected, received))| {
+            assert_eq!(expected, received, "{}th assertion failed", i + 1)
+        });
+}
+
+#[test]
+fn test_misc() {
+    let test_str = "::->||";
+    let expected = vec![
+        Ok(Token {
+            token: TokenEnum::DoubleColon,
+            row: 1,
+            column: 1,
+        }),
+        Ok(Token {
+            token: TokenEnum::Arrow,
+            row: 1,
+            column: 3,
+        }),
+        Ok(Token {
+            token: TokenEnum::Or,
+            row: 1,
+            column: 5,
+        }),
+    ];
+
+    let actual = tokenize(test_str)
+        .map(|item| item.map_err(|e| e.to_string()))
+        .collect::<Vec<_>>();
+
+    assert_eq!(expected.len(), actual.len(), "{actual:#?}");
+
+    expected
+        .into_iter()
+        .zip(actual)
+        .enumerate()
+        .for_each(|(i, (expected, received))| {
+            assert_eq!(expected, received, "{}th assertion failed", i + 1)
+        });
+}
+
+#[test]
+fn test_parse_numbers() {
+    let test_str = "123 123.123 123.123.123";
+    let expected = vec![
+        Ok(Token {
+            token: TokenEnum::Integer(123),
+            row: 1,
+            column: 1,
+        }),
+        Ok(Token {
+            token: TokenEnum::Float(123.123),
+            row: 1,
+            column: 5,
+        }),
+        Ok(Token {
+            token: TokenEnum::Float(123.123),
+            row: 1,
+            column: 13,
+        }),
+        Ok(Token {
+            token: TokenEnum::Period,
+            row: 1,
+            column: 20,
+        }),
+        Ok(Token {
+            token: TokenEnum::Integer(123),
+            row: 1,
+            column: 21,
+        }),
+    ];
+
+    let actual = tokenize(test_str)
+        .map(|item| item.map_err(|e| e.to_string()))
+        .collect::<Vec<_>>();
+
+    assert_eq!(expected.len(), actual.len(), "{actual:#?}");
+
+    expected
+        .into_iter()
+        .zip(actual)
+        .enumerate()
+        .for_each(|(i, (expected, received))| {
+            assert_eq!(expected, received, "{}th assertion failed", i + 1)
+        });
+}
+
+#[test]
+fn test_parse_str() {
+    let test_str = r#""This is a \"beautiful\" string""#;
+    let expected = vec![Ok(Token {
+        token: TokenEnum::String("This is a \"beautiful\" string".into()),
+        row: 1,
+        column: 1,
+    })];
+
+    let actual = tokenize(test_str)
+        .map(|item| item.map_err(|e| e.to_string()))
+        .collect::<Vec<_>>();
+
+    assert_eq!(expected.len(), actual.len(), "{actual:#?}");
+
+    expected
+        .into_iter()
+        .zip(actual)
+        .enumerate()
+        .for_each(|(i, (expected, received))| {
+            assert_eq!(expected, received, "{}th assertion failed", i + 1)
+        });
+}
+
+#[test]
+fn test_fib_st() {
+    let errors = tokenize(include_str!("../../../../examples/fib.st"))
+        .filter_map(Result::err)
+        .collect::<Vec<_>>();
+
+    assert_eq!(errors.len(), 0, "{:#?}", errors);
+}
