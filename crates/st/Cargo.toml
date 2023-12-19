@@ -7,5 +7,5 @@ edition = "2021"
 
 [dependencies]
 anyhow = { workspace = true }
-clap = { version = "4.4.8", features = ["derive"] }
+argster = { path = "../../../argster/argster", version = "0.1.1" }
 st-core = { path = "../st-core" }

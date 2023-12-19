@@ -112,12 +112,12 @@ fn parse_singles() {
             column: 11,
         }),
         Ok(Token {
-            token: TokenEnum::LessThen,
+            token: TokenEnum::LessThan,
             row: 1,
             column: 12,
         }),
         Ok(Token {
-            token: TokenEnum::GreaterThen,
+            token: TokenEnum::GreaterThan,
             row: 1,
             column: 13,
         }),

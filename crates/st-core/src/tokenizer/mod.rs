@@ -4,7 +4,7 @@ mod tests;
 use anyhow::anyhow;
 use std::iter::Peekable;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum TokenEnum {
     /// func
     KWFunc,
@@ -37,9 +37,9 @@ pub enum TokenEnum {
     PipeMatchEnd,
 
     /// <
-    LessThen,
+    LessThan,
     /// >
-    GreaterThen,
+    GreaterThan,
     /// +
     Plus,
     /// -
@@ -216,12 +216,12 @@ fn get_next<T: Iterator<Item = TokenIterItem>>(
         '<' => Ok(Token {
             row,
             column,
-            token: TokenEnum::LessThen,
+            token: TokenEnum::LessThan,
         }),
         '>' => Ok(Token {
             row,
             column,
-            token: TokenEnum::GreaterThen,
+            token: TokenEnum::GreaterThan,
         }),
         ':' => Ok(get_colon(iter, column, row)),
         '\\' => get_ends(iter, column, row),
