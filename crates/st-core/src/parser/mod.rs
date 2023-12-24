@@ -140,5 +140,5 @@ impl<I, E: Clone> ParserBase for Parser<I, E> {
     type Error = E;
 }
 
-#[cfg(test)]
+// #[cfg(test)]
 mod tests;

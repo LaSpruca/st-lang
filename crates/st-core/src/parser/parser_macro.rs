@@ -2,15 +2,15 @@ use super::*;
 
 #[macro_export]
 macro_rules! parser {
-    () => {::st_core::parser::Parser::new()};
+    () => {$crate::parser::Parser::new()};
     ({{ $e:expr }}) => {$e};
     ({ $e:expr }) => {$e};
 
     (take $case:pat => $item:expr, else $err:ident => $err_case:expr, $missing:expr; $($rest:tt)*) => {
         parser!(
             {{
-                ::st_core::parser::parser_macro::take(
-                    ::st_core::parser::Parser::new(),
+                $crate::parser::parser_macro::take(
+                    $crate::parser::Parser::new(),
                     |item| match item { $case => Ok($item), $err => Err($err_case) },
                     $missing
                 )
@@ -20,7 +20,7 @@ macro_rules! parser {
     };
     ({{ $parent:expr }} take $case:pat => $item:expr, else $err:ident => $err_case:expr, $missing:expr; $($rest:tt)*) => {
         parser!({{
-                ::st_core::parser::parser_macro::take(
+                $crate::parser::parser_macro::take(
                     $parent,
                     |item| match item { $case => Ok($item), $err => Err($err_case) },
                     $missing
@@ -33,8 +33,8 @@ macro_rules! parser {
     (match $case:pat, else $err:ident => $err_case:expr, $missing:expr; $($rest:tt)*) => {
         parser!(
             {{
-                ::st_core::parser::parser_macro::r#match(
-                    ::st_core::parser::Parser::new(),
+                $crate::parser::parser_macro::r#match(
+                    $crate::parser::Parser::new(),
                     |item| match item { $case => Ok(()), $err => Err($err_case) },
                     $missing
                 )
@@ -44,7 +44,7 @@ macro_rules! parser {
     };
     ({{ $parent:expr }} match $case:pat, else $err:ident => $err_case:expr, $missing:expr; $($rest:tt)*) => {
         parser!({{
-                ::st_core::parser::parser_macro::r#match(
+                $crate::parser::parser_macro::r#match(
                     $parent,
                     |item| match item { $case => Ok(()), $err => Err($err_case) },
                     $missing
@@ -57,8 +57,8 @@ macro_rules! parser {
     (then $parser_name:ident; $($rest:tt)*) => {
         parser!(
             {{
-                ::st_core::parser::parser_macro::then(
-                    ::st_core::parser::Parser::new(),
+                $crate::parser::parser_macro::then(
+                    $crate::parser::Parser::new(),
                     $parser_name
                 )
             }}
@@ -67,7 +67,7 @@ macro_rules! parser {
     };
     ({{ $parent:expr }} then $parser_name:ident; $($rest:tt)*) => {
         parser!({{
-                ::st_core::parser::parser_macro::r#match($parent, $parser_name)
+                $crate::parser::parser_macro::r#match($parent, $parser_name)
             }}
             $($rest)*
         )
@@ -76,8 +76,8 @@ macro_rules! parser {
     (then { $($sub_parser:tt)* }; $($rest:tt)*) => {
         parser!(
             {{
-                ::st_core::parser::parser_macro::then(
-                    ::st_core::parser::Parser::new(),
+                $crate::parser::parser_macro::then(
+                    $crate::parser::Parser::new(),
                     parser!($($sub_parser)*)
                 )
             }}
@@ -86,7 +86,26 @@ macro_rules! parser {
     };
     ({{ $parent:expr }} then { $($sub_parser:tt)* }; $($rest:tt)*) => {
         parser!({{
-                ::st_core::parser::parser_macro::r#then($parent, parser!($($sub_parser)*))
+                $crate::parser::parser_macro::r#then($parent, parser!($($sub_parser)*))
+            }}
+            $($rest)*
+        )
+    };
+
+    (transform $params:pat => $source:expr; $($rest:tt)*) => {
+        parser!(
+            {{
+                $crate::parser::parser_macro::transform(
+                    $crate::parser::Parser::new(),
+                    |$params| $source
+                )
+            }}
+            $($rest)*
+        )
+    };
+    ({{ $parent:expr }} transform $params:pat => $source:expr; $($rest:tt)*) => {
+        parser!({{
+                $crate::parser::parser_macro::transform($parent, |$params| $source)
             }}
             $($rest)*
         )
